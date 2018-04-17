@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logmaster.mapper.CommonMapper">
+
+    <resultMap id="appResultMap" type="com.logmaster.domain.model.App">
+        <id property="appId" column="app_id"/>
+        <collection property="platformList" column="app_id" javaType="ArrayList"
+                    ofType="com.logmaster.domain.model.AppPlatform" select="getPlatformList"/>
+
+    </resultMap>
+
+    <select id="getAppList" resultMap="appResultMap">
+        SELECT
+            id as app_id,
+            name as app_name
+        from meta_app
+    </select>
+
+
+    <select id="getPlatformList" resultType="com.logmaster.domain.model.AppPlatform">
+      SELECT
+          map.id as platform_id,
+          md.name as platform_name
+      from meta_app ma
+      inner join meta_app_platform map on ma.id = map.app_id
+      inner join meta_dictionary md on map.platform_type_id = md.id
+      where map.app_id = #{appId}
+    </select>
+
+    <select id="getPageList" resultType="com.logmaster.domain.model.Page">
+        SELECT
+            mp.id as id,
+            mp.name as name
+        from meta_business mb
+        inner join meta_business_page_rela mbpr on mb.id = mbpr.business_id
+        inner join meta_page mp on mbpr.page_id = mp.id
+        where mb.id = #{id}
+        and rela_type = 1
+    </select>
+
+
+</mapper>
