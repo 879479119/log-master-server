@@ -2,40 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.logmaster.mapper.CommonMapper">
 
-    <resultMap id="appResultMap" type="com.logmaster.domain.model.App">
-        <id property="appId" column="app_id"/>
-        <collection property="platformList" column="app_id" javaType="ArrayList"
-                    ofType="com.logmaster.domain.model.AppPlatform" select="getPlatformList"/>
-
+    <resultMap id="applist" type="com.logmaster.domain.model.App">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
     </resultMap>
 
-    <select id="getAppList" resultMap="appResultMap">
+    <select id="getAppList" resultMap="applist">
         SELECT
-            id as app_id,
-            name as app_name
+            id,
+            name
         from meta_app
     </select>
 
+    <resultMap id="appPlatform" type="com.logmaster.domain.model.AppPlatform">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+    </resultMap>
 
-    <select id="getPlatformList" resultType="com.logmaster.domain.model.AppPlatform">
-      SELECT
-          map.id as platform_id,
-          md.name as platform_name
-      from meta_app ma
-      inner join meta_app_platform map on ma.id = map.app_id
-      inner join meta_dictionary md on map.platform_type_id = md.id
-      where map.app_id = #{appId}
+    <select id="getPlatformList" resultMap="appPlatform">
+      SELECT * FROM meta_platform
     </select>
 
-    <select id="getPageList" resultType="com.logmaster.domain.model.Page">
+    <resultMap id="appVersion" type="com.logmaster.domain.model.AppVersion">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="app" property="appId" />
+        <result column="code" property="versionCode" />
+        <result column="platform" property="platformId" />
+        <result column="description" property="description" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <select id="getVersionList" resultMap="appVersion">
         SELECT
-            mp.id as id,
-            mp.name as name
-        from meta_business mb
-        inner join meta_business_page_rela mbpr on mb.id = mbpr.business_id
-        inner join meta_page mp on mbpr.page_id = mp.id
-        where mb.id = #{id}
-        and rela_type = 1
+            id,
+            name,
+            app,
+            code,
+            platform,
+            description,
+            create_time,
+            update_time
+        FROM
+            meta_version
+        WHERE app = #{id}
     </select>
 
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logmaster.mapper.TypeMapper">
+
+    <resultMap id="applist" type="com.logmaster.domain.model.App">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+    </resultMap>
+
+    <resultMap id="typeList" type="com.logmaster.domain.model.LogType">
+        <id property="id" column="id"/>
+        <!--<result column="name" property="name" />-->
+        <!--<result column="description" property="description" />-->
+        <collection property="logSubTypeList" column="id" javaType="ArrayList"
+                    ofType="com.logmaster.domain.model.LogSubType" select="getSubTypeList"/>
+    </resultMap>
+
+    <select id="getTypeList" resultMap="typeList">
+        SELECT
+            id,
+            name,
+            description
+        from log_type
+    </select>
+
+    <select id="getSubTypeList" resultType="com.logmaster.domain.model.LogSubType">
+        SELECT
+            id,
+            name,
+            description
+        from log_subtype
+        WHERE parent = #{id}
+    </select>
+
+
+</mapper>

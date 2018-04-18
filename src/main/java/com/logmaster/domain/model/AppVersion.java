@@ -12,7 +12,11 @@ public class AppVersion {
 
     private Integer id;
 
+    private String name;
+
     private String versionCode;
+
+    private String appId;
 
     private Integer platformId;
 
@@ -68,5 +72,21 @@ public class AppVersion {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

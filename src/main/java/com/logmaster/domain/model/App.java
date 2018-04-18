@@ -10,26 +10,18 @@ import java.util.List;
 
 public class App {
 
-    private Integer appId;
+    private Integer id;
 
-    private String appName;
+    private String name;
 
     private List<AppPlatform> platformList;
 
-    public Integer getAppId() {
-        return appId;
+    public String getName() {
+        return name;
     }
 
-    public void setAppId(Integer appId) {
-        this.appId = appId;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<AppPlatform> getPlatformList() {
@@ -38,5 +30,13 @@ public class App {
 
     public void setPlatformList(List<AppPlatform> platformList) {
         this.platformList = platformList;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
