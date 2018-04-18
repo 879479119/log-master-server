@@ -29,32 +29,43 @@ public class LogDataServiceImpl implements LogDataService {
 
     @Override
     public List<LogDataView> getList(LogDataView bean, Pagination pagination) {
-        return null;
+        return logDataMapper.getLogDataList(bean, pagination);
     }
 
     @Override
     public Integer getNums(LogDataView bean) {
-        return null;
+        return logDataMapper.getLogDataNums(bean);
     }
 
     @Override
     public Integer add(LogDataView bean) {
-        return null;
+        // 在mine中添加主体部分
+        logDataMapper.addLogData(bean);
+        final int id = bean.getId();
+        // 在column中添加columns
+
+        for (Column column : bean.getColumns()) {
+            column.setParent(id);
+        }
+        logDataMapper.addColumnData(bean.getColumns());
+
+        return id;
     }
 
     @Override
     public void edit(LogDataView bean) {
+        logDataMapper.editLogData(bean);
+        final List<Column> columns = bean.getColumns();
+        logDataMapper.delColumnData(bean.getId());
 
+        if (!columns.isEmpty()) {
+            logDataMapper.addColumnData(columns);
+        }
     }
 
     @Override
     public LogDataView getDetail(Integer id) {
-        return null;
-    }
-
-    @Override
-    public LogDataView getDetail(Integer id, User user) {
-        return logDataMapper.getLogDataView(id, user);
+        return logDataMapper.getLogDataView(id);
     }
 
 }

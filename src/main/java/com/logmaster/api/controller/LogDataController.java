@@ -47,7 +47,7 @@ public class LogDataController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Response getLogList(@RequestParam(required = false, defaultValue = "1") Integer page,
                                  @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                 @RequestParam(required = false, defaultValue = "mld.create_time") String orderBy,
+                                 @RequestParam(required = false, defaultValue = "create_time") String orderBy,
                                  @RequestParam(required = false, defaultValue = "DESC") String orderType,
                                  LogDataView logDataView,
                                  HttpServletRequest request) {
@@ -74,6 +74,9 @@ public class LogDataController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Response addLog(@RequestBody LogDataView logDataView, HttpServletRequest request) {
         try {
+            if (logDataView.getId() != null) {
+                return Responses.errorResponse(ErrorCodeEnum.SAVEERROR.getErrorCode(), ErrorCodeEnum.SAVEERROR.getErrorName());
+            }
             Integer logId = logDataService.add(logDataView);
             return Responses.successResponse().addData("logId", logId);
         } catch (Exception e) {

@@ -16,9 +16,8 @@ public interface LogDataService extends BaseService<LogDataView> {
     /**
      * 获取详情.
      * @param id 日志id
-     * @param user 用户
      * @return 详情信息.
      */
-    LogDataView getDetail(Integer id, User user);
+    LogDataView getDetail(Integer id);
 
 }

@@ -4,18 +4,35 @@
 
     <resultMap id="logResultMap" type="com.logmaster.domain.model.LogDataView">
         <id property="id" column="id"/>
+        <result column="name" property="" />
         <collection property="versionList" column="id" javaType="ArrayList"
                     ofType="com.logmaster.domain.model.LogAppVersionView" select="getVersionList"/>
-        <collection property="businessList" column="id" javaType="ArrayList"
-                    ofType="com.logmaster.domain.model.LogBusinessRelaView" select="getBusinessList"/>
     </resultMap>
 
 
-    <select id="getLogDataList" resultMap="logResultMap">
-         SELECT
-            max(case when muf.data_id is null then 0 else 1 end ) favourite
-        FROM meta_app
-        group by mld.id
+    <select id="getLogDataList" resultType="com.logmaster.domain.model.LogDataView">
+        SELECT
+        id,
+        name,
+        `status` as status,
+        platform_id as platformId,
+        version_id as versionId,
+        type,
+        sub_type as subType,
+        description,
+        create_time as createTime,
+        update_time as updateTime
+        FROM mine
+        <if test="logDataView != null">
+            <where>
+                <if test="logDataView.name != null and logDataView.name != ''">
+                    AND name LIKE '%${logDataView.name}%'
+                </if>
+                <if test="logDataView.status != null and logDataView.status != ''">
+                    AND status = ${logDataView.status}
+                </if>
+            </where>
+        </if>
         order by ${page.orderBy} ${page.orderType} limit ${page.startNum}, ${page.size}
     </select>
 
@@ -68,72 +85,67 @@
         where mlbr.id = #{relaId}
     </select>
 
-
     <select id="getLogDataNums" resultType="java.lang.Integer" >
         SELECT
-          count(DISTINCT mld.id)
-        FROM meta_log_data mld
-        LEFT JOIN meta_log_version_rela mlvr on mld.id = mlvr.data_id
-        LEFT JOIN meta_app_vsersion mav on mlvr.version_id = mav.id
-        LEFT JOIN meta_app_platform map on mav.platform_id = map.id
-        LEFT JOIN meta_app ma on map.app_id = ma.id
-        LEFT JOIN meta_log_business_rela mlbr on mld.id = mlbr.data_id
-        LEFT JOIN meta_log_page_rela mlpr on mlbr.id =mlpr.business_rela_id
-        LEFT JOIN meta_dictionary md1 on map.platform_type_id = md1.id
-        LEFT JOIN meta_dictionary md2 on mld.log_level_id = md2.id
-        LEFT JOIN meta_dictionary md3 on mld.log_type_id = md3.id
-        <if test="user.id != null ">
-            LEFT JOIN  meta_user_favourite muf ON muf.data_id = mld.id and muf.data_type = 1 and muf.user_id=#{user.id}
-        </if>
+          count(DISTINCT id)
+        FROM mine
     </select>
 
+    <insert id="addLogData" parameterType="com.logmaster.domain.model.LogDataView" useGeneratedKeys="true" keyProperty="log.id">
+        INSERT INTO mine
+        (name, platform_id, status, version_id, type, sub_type, description) VALUES
+        (
+            #{log.name},
+            #{log.platformId},
+            #{log.status},
+            #{log.versionId},
+            #{log.type},
+            #{log.subType},
+            #{log.description}
+        )
+    </insert>
 
-    <insert id="addLogData" useGeneratedKeys="true" keyProperty="logDataView.id">
-        INSERT INTO meta_log_data
+    <insert id="addColumnData" >
+        INSERT INTO `column`
+        (name, parent, expression, description, creator) VALUES
+        <foreach collection="columns" item="t" separator=",">
+        (
+            #{t.name},
+            #{t.parent},
+            #{t.expression},
+            #{t.description},
+            #{t.creator}
+        )
+        </foreach>
     </insert>
 
     <update id="editLogData">
         update
-        meta_log_data
+        mine
         <set>
-            <if test="logDataView.dataName != null ">
-            data_name = #{logDataView.dataName},
+            <if test="logDataView.name != null ">
+                name = #{logDataView.name},
             </if>
-            <if test="logDataView.dataNameCn != null ">
-                data_name_cn = #{logDataView.dataNameCn},
+            <if test="logDataView.status != null ">
+                `status` = #{logDataView.status},
             </if>
-            <if test="logDataView.task != null ">
-                task = #{logDataView.task},
+            <if test="logDataView.platformId != null ">
+                platform_id = #{logDataView.platformId},
             </if>
-            <if test="logDataView.logLevelId != null ">
-                log_level_id = #{logDataView.logLevelId},
+            <if test="logDataView.versionId != null ">
+                version_id = #{logDataView.versionId},
             </if>
-            <if test="logDataView.logTypeId != null ">
-                log_type_id = #{logDataView.logTypeId},
+            <if test="logDataView.type != null ">
+                type = #{logDataView.type},
             </if>
-            <if test="logDataView.devManager != null ">
-                dev_manager = #{logDataView.devManager},
-            </if>
-            <if test="logDataView.testManager != null ">
-                test_manager = #{logDataView.testManager},
-            </if>
-            <if test="logDataView.productManager != null ">
-                product_manager = #{logDataView.productManager},
-            </if>
-            <if test="logDataView.reviewManager != null ">
-                review_manager = #{logDataView.reviewManager},
+            <if test="logDataView.subType != null ">
+                sub_type = #{logDataView.subType},
             </if>
             <if test="logDataView.description != null ">
                 description = #{logDataView.description},
             </if>
-            <if test="logDataView.testDescription != null ">
-                test_description = #{logDataView.testDescription},
-            </if>
-            <if test="logDataView.status != null ">
-                status = #{logDataView.status},
-            </if>
-            <if test="logDataView.effective != null ">
-                effective = #{logDataView.effective}
+            <if test="logDataView.updateTime != null ">
+                update_time = #{logDataView.updateTime},
             </if>
         </set>
         where
@@ -142,53 +154,24 @@
 
     <resultMap id="logDetailResultMap" type="com.logmaster.domain.model.LogDataView">
         <id property="id" column="id"/>
-        <collection property="versionList" column="id" javaType="ArrayList"
-                    ofType="com.logmaster.domain.model.LogAppVersionView" select="getVersionList"/>
-        <collection property="businessList" column="id" javaType="ArrayList"
-                    ofType="com.logmaster.domain.model.LogBusinessView" select="getBusinessList"/>
-        <collection property="keyDataList" column="id" javaType="ArrayList"
-                    ofType="com.logmaster.domain.model.LogKeyDataView" select="getKeyDataList"/>
-        <collection property="baseKeyList" column="id" javaType="ArrayList"
-                    ofType="com.logmaster.domain.model.BaseKeyView" select="getBaseKeyList"/>
+        <collection property="columns" column="id" javaType="ArrayList"
+                    ofType="com.logmaster.domain.model.Column" select="getColumnList"/>
     </resultMap>
 
     <select id="getLogDataView" resultMap="logDetailResultMap">
         SELECT
-            mld.id as id,
-            max(mld.data_name) as data_name,
-            max(mld.data_name_cn) as data_name_cn,
-            max(mld.task) as task,
-            max(ma.id) as app_id,
-            max(ma.name) as app_name,
-            max(mld.log_level_id) as log_level_id,
-            max(md2.name) as log_level_name,
-            max(mld.log_type_id) as log_type_id,
-            max(md3.name) as log_type_name,
-            max(mld.creator) as creator,
-            max(mld.dev_manager) as dev_manager,
-            max(mld.test_manager) as test_manager,
-            max(mld.review_manager) as review_manager,
-            max(mld.product_manager) as product_manager,
-            max(mld.description) as description,
-            max(mld.test_description) as test_description,
-            max(mld.create_time) as create_time,
-            max(mld.update_time) as update_time,
-            max(mld.status) as status,
-            max(mld.effective) as effective,
-            max(case when muf.data_id is null then 0 else 1 end ) favourite
-        FROM meta_log_data mld
-        LEFT JOIN meta_log_version_rela mlvr on mld.id = mlvr.data_id
-        LEFT JOIN meta_app_vsersion mav on mlvr.version_id = mav.id
-        LEFT JOIN meta_app_platform map on mav.platform_id = map.id
-        LEFT JOIN meta_app ma on map.app_id = ma.id
-        LEFT JOIN meta_log_business_rela mlbr on mld.id = mlbr.data_id
-        LEFT JOIN meta_log_page_rela mlpr on mlbr.id =mlpr.business_rela_id
-        LEFT JOIN meta_dictionary md1 on map.platform_type_id = md1.id
-        LEFT JOIN meta_dictionary md2 on mld.log_level_id = md2.id
-        LEFT JOIN meta_dictionary md3 on mld.log_type_id = md3.id
-        LEFT JOIN meta_user_favourite muf ON muf.data_id = mld.id and muf.data_type = 1 and muf.user_id=#{user.id}
-        where mld.id = #{id}
-        group by mld.id
+            id,
+            name,
+            `status` as status,
+            platform_id as platformId,
+            version_id as versionId,
+            type,
+            sub_type as subType,
+            description,
+            create_time as createTime,
+            update_time as updateTime
+        FROM mine
+        WHERE id = #{id}
     </select>
 
     <resultMap id="KeyDataMap" type="com.logmaster.domain.model.LogKeyDataView">
@@ -196,127 +179,24 @@
                 typeHandler="com.logmaster.handler.ListTypeHandler"/>
     </resultMap>
 
-    <select id="getBaseKeyList" resultType="com.logmaster.domain.model.BaseKeyView">
+    <select id="getColumnList" resultType="com.logmaster.domain.model.Column">
         SELECT
-            mbk.id as id,
-            mbk.key_name as key_name,
-            mbk.key_name_cn as key_name_cn,
-            mbk.key_type_id as key_type_id,
-            md.name as key_type_name,
-            mbk.required as required,
-            mbk.default_value as default_value,
-            mbk.regex as regex,
-            mbk.key_description as key_description
-        FROM  meta_base_key mbk
-        INNER JOIN meta_dictionary md on mbk.key_type_id = md.id
-    </select>
-
-    <select id="checkUniqueLogData" resultType="java.lang.Integer">
-        SELECT
-            count(*)
-        FROM meta_log_data
-        where
-        data_name = #{logDataView.dataName}
-        <if test="logDataView.id != null and logDataView.id != -10000">
-            <![CDATA[
-            AND id <> #{logDataView.id}
-            ]]>
-        </if>
-    </select>
-
-    <select id="dataNameComplete" resultType="java.lang.String">
-        SELECT
-            max(mld.data_name) as data_name
-        FROM meta_log_data mld
-        LEFT JOIN meta_log_version_rela mlvr on mld.id = mlvr.data_id
-        LEFT JOIN meta_app_vsersion mav on mlvr.version_id = mav.id
-        LEFT JOIN meta_app_platform map on mav.platform_id = map.id
-        LEFT JOIN meta_app ma on map.app_id = ma.id
-        LEFT JOIN meta_log_business_rela mlbr on mld.id = mlbr.data_id
-        LEFT JOIN meta_log_page_rela mlpr on mlbr.id =mlpr.business_rela_id
-        LEFT JOIN meta_dictionary md1 on map.platform_type_id = md1.id
-        LEFT JOIN meta_dictionary md2 on mld.log_level_id = md2.id
-        LEFT JOIN meta_dictionary md3 on mld.log_type_id = md3.id
-        <if test="logDataView != null">
-            <where>
-                <if test="logDataView.appId != null and logDataView.appId  != -10000">
-                    AND ma.id = #{logDataView.appId }
-                </if>
-                <if test="logDataView.platformId != null  and logDataView.platformId != -10000">
-                    AND map.id = #{logDataView.platformId}
-                </if>
-                <if test="logDataView.businessId != null  and logDataView.businessId != -10000">
-                    AND mlbr.business_id = #{logDataView.businessId}
-                </if>
-                <if test="logDataView.pageId != null  and logDataView.pageId != -10000">
-                    AND mlpr.page_id = #{logDataView.pageId}
-                </if>
-                <if test="logDataView.dataName != null and logDataView.dataName != ''">
-                    AND mld.data_name LIKE '%${logDataView.dataName}%'
-                </if>
-                <if test="logDataView.task != null and logDataView.task != ''">
-                    AND mld.task LIKE '%${logDataView.task}%'
-                </if>
-                <if test="logDataView.logTypeId != null and logDataView.logTypeId  != -10000">
-                    AND mld.log_type_id = #{logDataView.logTypeId}
-                </if>
-                <if test="logDataView.logLevelId != null and logDataView.logLevelId  != -10000">
-                    AND mld.log_level_id = #{logDataView.logLevelId}
-                </if>
-                <if test="logDataView.creator != null and logDataView.creator != ''">
-                    AND mld.creator LIKE '%${logDataView.creator}%'
-                </if>
-            </where>
-        </if>
-        group by mld.id
-    </select>
-
-    <select id="taskComplete" resultType="java.lang.String">
-        SELECT
-            task
-        FROM meta_log_data mld
-        LEFT JOIN meta_log_version_rela mlvr on mld.id = mlvr.data_id
-        LEFT JOIN meta_app_vsersion mav on mlvr.version_id = mav.id
-        LEFT JOIN meta_app_platform map on mav.platform_id = map.id
-        LEFT JOIN meta_app ma on map.app_id = ma.id
-        LEFT JOIN meta_log_business_rela mlbr on mld.id = mlbr.data_id
-        LEFT JOIN meta_log_page_rela mlpr on mlbr.id =mlpr.business_rela_id
-        LEFT JOIN meta_dictionary md1 on map.platform_type_id = md1.id
-        LEFT JOIN meta_dictionary md2 on mld.log_level_id = md2.id
-        LEFT JOIN meta_dictionary md3 on mld.log_type_id = md3.id
-        <if test="logDataView != null">
-            <where>
-                <if test="logDataView.appId != null and logDataView.appId  != -10000">
-                    AND ma.id = #{logDataView.appId }
-                </if>
-                <if test="logDataView.platformId != null  and logDataView.platformId != -10000">
-                    AND map.id = #{logDataView.platformId}
-                </if>
-                <if test="logDataView.businessId != null  and logDataView.businessId != -10000">
-                    AND mlbr.business_id = #{logDataView.businessId}
-                </if>
-                <if test="logDataView.pageId != null  and logDataView.pageId != -10000">
-                    AND mlpr.page_id = #{logDataView.pageId}
-                </if>
-                <if test="logDataView.dataName != null and logDataView.dataName != ''">
-                    AND mld.data_name LIKE '%${logDataView.dataName}%'
-                </if>
-                <if test="logDataView.task != null and logDataView.task != ''">
-                    AND mld.task LIKE '%${logDataView.task}%'
-                </if>
-                <if test="logDataView.logTypeId != null and logDataView.logTypeId  != -10000">
-                    AND mld.log_type_id = #{logDataView.logTypeId}
-                </if>
-                <if test="logDataView.logLevelId != null and logDataView.logLevelId  != -10000">
-                    AND mld.log_level_id = #{logDataView.logLevelId}
-                </if>
-                <if test="logDataView.creator != null and logDataView.creator != ''">
-                    AND mld.creator LIKE '%${logDataView.creator}%'
-                </if>
-            </where>
-        </if>
-        group by mld.task
+            id,
+            name,
+            parent,
+            expression,
+            creator,
+            description,
+            create_time as createTime,
+            update_time as updateTime
+        FROM `column`
+        WHERE parent = #{id}
     </select>
 
 
+    <delete id="delColumnData">
+        DELETE
+        from  `column`
+        where parent = #{id}
+    </delete>
 </mapper>
