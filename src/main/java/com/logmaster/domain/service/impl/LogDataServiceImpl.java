@@ -38,6 +38,7 @@ public class LogDataServiceImpl implements LogDataService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer add(LogDataView bean) {
         // 在mine中添加主体部分
         logDataMapper.addLogData(bean);
@@ -53,6 +54,7 @@ public class LogDataServiceImpl implements LogDataService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void edit(LogDataView bean) {
         logDataMapper.editLogData(bean);
         final List<Column> columns = bean.getColumns();

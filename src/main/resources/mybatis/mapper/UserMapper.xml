@@ -6,19 +6,13 @@
         SELECT
         id,
         name,
-        role,
+        mail,
+        permission,
+        phone,
         create_time,
         update_time
         FROM
         user
-        <where>
-            <if test="user.name != null and user.name != ''">
-                AND name LIKE '%${user.name}%'
-            </if>
-            <if test="user.role != null and user.role != -10000">
-                AND role = #{user.role}
-            </if>
-        </where>
         ORDER BY create_time DESC
         LIMIT ${page.startNum}, ${page.size};
     </select>
@@ -27,26 +21,7 @@
         SELECT
         COUNT(*)
         FROM
-        meta_user
-        <where>
-            <if test="user.name != null and user.name != ''">
-                AND name LIKE '%${user.name}%'
-            </if>
-            <if test="user.role != null and user.role != -10000">
-                AND role = #{user.role}
-            </if>
-        </where>
-    </select>
-
-    <select id="getUserByName" resultType="com.logmaster.domain.model.User">
-        SELECT
-        id,
-        `name` as name,
-        role,
-        create_time,
-        update_time
-        FROM meta_user mu
-        where mu.name = #{name}
+        user
     </select>
 
     <select id="getUserById" resultType="com.logmaster.domain.model.User">
@@ -67,47 +42,4 @@
         FROM user
         where mail = #{mail} AND password = #{password}
     </select>
-
-    <select id="userComplete" resultType="com.logmaster.domain.model.User">
-        SELECT
-        id,
-        `name` as name,
-        role,
-        create_time,
-        update_time
-        FROM meta_user mu
-        <where>
-            <if test="user.name != null and user.name != ''">
-                AND name LIKE '%${user.name}%'
-            </if>
-            <if test="user.role != null and user.role != -10000">
-                AND role = #{user.role}
-            </if>
-        </where>
-    </select>
-
-    <select id="getUserByRole" resultType="java.lang.String">
-        SELECT
-        name
-        FROM meta_user
-        where role = #{role}
-    </select>
-
-    <select id="getUserByTask" resultType="java.lang.String">
-        SELECT
-        meta_user.name
-        FROM
-        meta_user_group_rela
-        INNER JOIN meta_user  ON meta_user_group_rela.user_id = meta_user.id
-        INNER JOIN meta_task_group_rela  ON meta_task_group_rela.group_id = meta_user_group_rela.group_id
-        WHERE
-        meta_user.role = #{role}
-        AND meta_task_group_rela.task_type_id = #{taskTypeId}
-        AND meta_user_group_rela.sub_group_id = #{subGroupId}
-    </select>
-
-    <update id="updateUserRole">
-        UPDATE meta_user set role= #{role} WHERE id = #{id}
-    </update>
-
 </mapper>

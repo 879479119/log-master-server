@@ -72,12 +72,10 @@ public class UserController {
                                 User user) {
         try {
             Pagination pagination = new Pagination((page - 1) * pageSize, pageSize);
-            QueryTransformUtil<User> queryTransformUtil = new QueryTransformUtil<>();
-            queryTransformUtil.transformQuery(user);
-            List<User> userList = userService.getUserList(pagination, user);
+            List<User> userList = userService.getUserList(pagination);
             List<UserResponse> userResponseList = Lists.newArrayList();
             userList.forEach(userInfo -> userResponseList.add(new UserResponse(userInfo)));
-            Integer totalItems = userService.getUserNums(user);
+            Integer totalItems = userService.getUserNums();
             return Responses.pagedResponse(totalItems, page, pageSize).addData("users", userResponseList);
         } catch (Exception e) {
             logger.error(ErrorCodeEnum.LISTERROR.getErrorName() + Util.getExceptionMessage(e));

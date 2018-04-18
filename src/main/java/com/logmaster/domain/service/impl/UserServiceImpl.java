@@ -31,13 +31,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Override
-    public List<User> getUserList(Pagination page, User user) {
-        return userMapper.getUserList(page, user);
+    public List<User> getUserList(Pagination page) {
+        return userMapper.getUserList(page);
     }
 
     @Override
-    public Integer getUserNums( User user) {
-        return userMapper.getUserNums(user);
+    public Integer getUserNums() {
+        return userMapper.getUserNums();
     }
 
     @Override

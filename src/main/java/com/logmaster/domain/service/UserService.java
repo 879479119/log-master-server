@@ -23,17 +23,15 @@ public interface UserService {
      * 获取用户列表.
      *
      * @param page 分页实体
-     * @param user 用户名
      * @return List
      */
-    List<User> getUserList(Pagination page, User user);
+    List<User> getUserList(Pagination page);
 
     /**
      * 获取用户总数.
-     * @param user 用户名
      * @return Integer
      */
-    Integer getUserNums(User user);
+    Integer getUserNums();
 
     /**
      * 获取用户信息.

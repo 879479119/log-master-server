@@ -1,40 +1,29 @@
 package com.logmaster.api.response;
 
 
-import com.logmaster.application.constants.Constants;
 import com.logmaster.domain.model.User;
 
 
-/**
- * @author wanglu
- * @Description:
- * @Date: 2017/12/13.
- */
-
-
 public class UserResponse {
+    public UserResponse(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.phone = user.getPhone();
+        this.permission = user.getPermission();
+        this.mail = user.getMail();
+    }
 
     private Integer id;
 
     private String name;
 
-    private Integer role;
+    private String phone;
 
-    private String roleName;
+    private Integer permission;
 
+    private String mail;
 
     public UserResponse() {
-    }
-
-    /**
-     * 构造方法.
-     * @param user 用户
-     */
-    public UserResponse(User user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.role = user.getRole();
-        this.roleName = Constants.ROLE_MAP.get(user.getRole());
     }
 
     public Integer getId() {
@@ -53,19 +42,27 @@ public class UserResponse {
         this.name = name;
     }
 
-    public Integer getRole() {
-        return role;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setRole(Integer role) {
-        this.role = role;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public Integer getPermission() {
+        return permission;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setPermission(Integer permission) {
+        this.permission = permission;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 }

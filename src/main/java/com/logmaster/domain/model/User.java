@@ -19,6 +19,8 @@ public class User {
 
     private Integer role;
 
+    private String phone;
+
     private Integer permission;
 
     private String mail;
@@ -91,5 +93,13 @@ public class User {
 
     public void setPermission(Integer permission) {
         this.permission = permission;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

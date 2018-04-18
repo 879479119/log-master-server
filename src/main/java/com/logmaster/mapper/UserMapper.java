@@ -21,17 +21,15 @@ public interface UserMapper {
     /**
      * 查询用户列表.
      * @param page 页面
-     * @param user 用户名
      * @return 用户列表
      */
-    List<User> getUserList(@Param("page") Pagination page, @Param("user") User user);
+    List<User> getUserList(@Param("page") Pagination page);
 
     /**
      * 获取用户条数.
-     * @param user 用户名
      * @return 条数
      */
-    Integer getUserNums(@Param("user") User user);
+    Integer getUserNums();
 
     /**
      * 添加用户.
