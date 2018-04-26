@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logmaster.mapper.ABMapper">
+
+    <resultMap id="logResultMap" type="com.logmaster.domain.model.LogDataView">
+        <id property="id" column="id"/>
+        <result column="name" property="" />
+        <collection property="versionList" column="id" javaType="ArrayList"
+                    ofType="com.logmaster.domain.model.LogAppVersionView" select="getVersionList"/>
+    </resultMap>
+
+    <select id="getLogDataList" resultType="com.logmaster.domain.model.ABTestView">
+        SELECT
+        id,
+        name,
+        `status` as status,
+        platform_id as platformId,
+        version_id as versionId,
+        creator,
+        percentage,
+        description,
+        create_time as createTime,
+        update_time as updateTime,
+        start_time as startTime,
+        end_time as endTime
+        FROM ab_test
+        <if test="aBTestView != null">
+            <where>
+                <if test="aBTestView.name != null and aBTestView.name != ''">
+                    AND name LIKE '%${aBTestView.name}%'
+                </if>
+                <if test="aBTestView.status != null and aBTestView.status != ''">
+                    AND status = ${aBTestView.status}
+                </if>
+            </where>
+        </if>
+        order by ${page.orderBy} ${page.orderType} limit ${page.startNum}, ${page.size}
+    </select>
+
+    <select id="getLogDataNums" resultType="java.lang.Integer" >
+        SELECT
+          count(DISTINCT id)
+        FROM ab_test
+    </select>
+
+    <insert id="addLogData" parameterType="com.logmaster.domain.model.ABTestView" useGeneratedKeys="true" keyProperty="ab.id">
+        INSERT INTO ab_test
+        (name, platform_id, version_id, start_time, end_time, percentage, description, creator) VALUES
+        (
+            #{ab.name},
+            #{ab.platformId},
+            #{ab.versionId},
+            #{ab.startTime},
+            #{ab.endTime},
+            #{ab.percentage},
+            #{ab.description},
+            #{ab.creator}
+        )
+    </insert>
+
+    <insert id="addColumnData" >
+        INSERT INTO ab_param
+        (name, description, feature, config, parent, `primary`) VALUES
+        <foreach collection="params" item="t" separator=",">
+        (
+            #{t.name},
+            #{t.description},
+            #{t.feature},
+            #{t.config},
+            #{t.parent},
+            #{t.primary}
+        )
+        </foreach>
+    </insert>
+
+    <update id="editLogData">
+        update
+        ab_test
+        <set>
+            <if test="aBTestView.name != null ">
+                name = #{aBTestView.name},
+            </if>
+            <if test="aBTestView.status != null ">
+                `status` = #{aBTestView.status},
+            </if>
+            <if test="aBTestView.platformId != null ">
+                platform_id = #{aBTestView.platformId},
+            </if>
+            <if test="aBTestView.versionId != null ">
+                version_id = #{aBTestView.versionId},
+            </if>
+            <if test="aBTestView.description != null ">
+                description = #{aBTestView.description},
+            </if>
+            <if test="aBTestView.updateTime != null ">
+                update_time = #{aBTestView.updateTime},
+            </if>
+        </set>
+        where
+        id = #{aBTestView.id}
+    </update>
+
+    <resultMap id="logDetailResultMap" type="com.logmaster.domain.model.ABTestView">
+        <id property="id" column="id"/>
+        <collection property="params" column="id" javaType="ArrayList"
+                    ofType="com.logmaster.domain.model.Param" select="getColumnList"/>
+    </resultMap>
+
+    <select id="getABTestView" resultMap="logDetailResultMap">
+        SELECT
+            id,
+            name,
+            `status` as status,
+            platform_id as platformId,
+            version_id as versionId,
+            creator,
+            percentage,
+            description,
+            create_time as createTime,
+            update_time as updateTime
+        FROM ab_test
+        WHERE id = #{id}
+    </select>
+
+    <select id="getColumnList" resultType="com.logmaster.domain.model.Param">
+        SELECT
+            id,
+            name,
+            parent,
+            description,
+            `primary`,
+            feature,
+            config
+        FROM ab_param
+        WHERE parent = #{id}
+    </select>
+
+
+    <delete id="delColumnData">
+        DELETE
+        from ab_param
+        where parent = #{id}
+    </delete>
+</mapper>

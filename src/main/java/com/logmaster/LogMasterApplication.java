@@ -21,10 +21,10 @@ public class LogMasterApplication extends WebMvcConfigurerAdapter {
     @Value("${com.wanlei.name}")
     private String name;
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new PermissionInterceptor()).addPathPatterns("/**").excludePathPatterns("/api/user/login");
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new PermissionInterceptor()).addPathPatterns("/**").excludePathPatterns("/api/user/login");
+    }
 
 
     public static void main(String[] args) {
