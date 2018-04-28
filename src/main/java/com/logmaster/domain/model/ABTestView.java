@@ -27,6 +27,16 @@ public class ABTestView {
 
     private int defaultParam;
 
+    private String hash;
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
     public int getCreator() {
         return creator;
     }
@@ -69,7 +79,7 @@ public class ABTestView {
     private Date startTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date endTime = new Date();
+    private Date endTime;
 
     public Date getStartTime() {
         return startTime;

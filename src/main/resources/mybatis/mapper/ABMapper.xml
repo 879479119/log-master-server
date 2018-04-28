@@ -2,14 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.logmaster.mapper.ABMapper">
 
-    <resultMap id="logResultMap" type="com.logmaster.domain.model.LogDataView">
+    <resultMap id="logResultMap" type="com.logmaster.domain.model.ABTestView">
         <id property="id" column="id"/>
-        <result column="name" property="" />
-        <collection property="versionList" column="id" javaType="ArrayList"
-                    ofType="com.logmaster.domain.model.LogAppVersionView" select="getVersionList"/>
+        <collection property="params" column="id" javaType="ArrayList"
+                    ofType="com.logmaster.domain.model.Param" select="getColumnList"/>
     </resultMap>
 
-    <select id="getLogDataList" resultType="com.logmaster.domain.model.ABTestView">
+    <select id="getLogDataList" resultMap="logResultMap">
         SELECT
         id,
         name,
@@ -22,15 +21,22 @@
         create_time as createTime,
         update_time as updateTime,
         start_time as startTime,
-        end_time as endTime
+        end_time as endTime,
+        `hash`
         FROM ab_test
         <if test="aBTestView != null">
             <where>
-                <if test="aBTestView.name != null and aBTestView.name != ''">
-                    AND name LIKE '%${aBTestView.name}%'
-                </if>
+                <!--<if test="aBTestView.name != null and aBTestView.name != ''">-->
+                    <!--AND name LIKE '%${aBTestView.name}%'-->
+                <!--</if>-->
                 <if test="aBTestView.status != null and aBTestView.status != ''">
                     AND status = ${aBTestView.status}
+                </if>
+                <if test="aBTestView.startTime != null">
+                    AND start_time <![CDATA[ < ]]> CURRENT_TIMESTAMP
+                </if>
+                <if test="aBTestView.endTime != null">
+                    AND end_time <![CDATA[ > ]]> CURRENT_TIMESTAMP
                 </if>
             </where>
         </if>
@@ -45,7 +51,7 @@
 
     <insert id="addLogData" parameterType="com.logmaster.domain.model.ABTestView" useGeneratedKeys="true" keyProperty="ab.id">
         INSERT INTO ab_test
-        (name, platform_id, version_id, start_time, end_time, percentage, description, creator) VALUES
+        (name, platform_id, version_id, start_time, end_time, percentage, description, creator, `hash`) VALUES
         (
             #{ab.name},
             #{ab.platformId},
@@ -54,7 +60,8 @@
             #{ab.endTime},
             #{ab.percentage},
             #{ab.description},
-            #{ab.creator}
+            #{ab.creator},
+            #{ab.hash}
         )
     </insert>
 
@@ -117,7 +124,8 @@
             percentage,
             description,
             create_time as createTime,
-            update_time as updateTime
+            update_time as updateTime,
+            `hash`
         FROM ab_test
         WHERE id = #{id}
     </select>
@@ -134,7 +142,6 @@
         FROM ab_param
         WHERE parent = #{id}
     </select>
-
 
     <delete id="delColumnData">
         DELETE

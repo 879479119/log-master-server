@@ -18,7 +18,7 @@ public class Pagination {
     /** 查询筛选数据量.*/
     private int searchCount;
     /**  排序字段名.*/
-    private String orderBy;
+    private String orderBy = "create_time";
     /** 序方式, DESC OR ASC.*/
     private String orderType = "DESC";
 

@@ -23,7 +23,10 @@ public class LogMasterApplication extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new PermissionInterceptor()).addPathPatterns("/**").excludePathPatterns("/api/user/login");
+        registry.addInterceptor(new PermissionInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/api/user/login")
+                .excludePathPatterns("/api/hybrid/**");
     }
 
 
