@@ -12,4 +12,16 @@ public interface QueryMapper {
 
     Integer addCount1();
 
+    Integer count();
+
+    Integer activeCount();
+
+    List<Integer> lineActiveDay();
+
+    List<Integer> pvCount();
+
+    List<Integer> viewTime();
+
+    List<Integer> enterCount();
+
 }

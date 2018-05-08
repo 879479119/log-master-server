@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service("analysisService")
 public class AnalysisServiceImpl implements AnalysisService {
@@ -18,5 +20,35 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Override
     public Integer addCount() {
         return queryMapper.addCount1();
+    }
+
+    @Override
+    public Integer count() {
+        return queryMapper.count();
+    }
+
+    @Override
+    public Integer activeCount() {
+        return queryMapper.activeCount();
+    }
+
+    @Override
+    public List<Integer> lineActiveDay() {
+        return queryMapper.lineActiveDay();
+    }
+
+    @Override
+    public List<Integer> pvCount() {
+        return queryMapper.pvCount();
+    }
+
+    @Override
+    public List<Integer> viewTime() {
+        return queryMapper.viewTime();
+    }
+
+    @Override
+    public List<Integer> enterCount() {
+        return queryMapper.enterCount();
     }
 }

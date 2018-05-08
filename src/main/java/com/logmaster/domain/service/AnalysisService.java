@@ -1,6 +1,8 @@
 package com.logmaster.domain.service;
 
 
+import java.util.List;
+
 public interface AnalysisService {
 
     /**
@@ -8,5 +10,26 @@ public interface AnalysisService {
      * @return 用户数
      */
     Integer addCount();
+
+    /**
+     * 所有用户的数量
+     * @return 数量
+     */
+    Integer count();
+
+
+    Integer activeCount();
+
+
+    List<Integer> lineActiveDay();
+
+
+    List<Integer> pvCount();
+
+
+    List<Integer> viewTime();
+
+    List<Integer> enterCount();
+
 
 }

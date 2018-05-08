@@ -3,6 +3,48 @@
 <mapper namespace="com.logmaster.mapper.slave.QueryMapper">
 
     <select id="addCount1" resultType="java.lang.Integer">
-        SELECT COUNT(DISTINCT `name`) FROM raw_event_enter WHERE TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) <![CDATA[ <= ]]> 1
+        SELECT COUNT(DISTINCT `name`) FROM raw_event_enter WHERE TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) <![CDATA[ <= ]]> 1;
     </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT `name`) FROM raw_event_enter;
+    </select>
+
+    <select id="activeCount" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT `name`) FROM raw_event_enter WHERE TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) <![CDATA[ <= ]]> 30;
+    </select>
+
+    <select id="lineActiveDay" resultType="com.logmaster.domain.model.PerDay">
+        SELECT
+            TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) as `day` ,
+            COUNT(DISTINCT `name`) as `count`
+        FROM raw_event_enter
+        GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
+    </select>
+
+    <select id="pvCount" resultType="com.logmaster.domain.model.PerDay">
+        SELECT
+            TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) as `day` ,
+            COUNT(id) as `count`
+        FROM raw_view_page
+        GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
+    </select>
+
+    <select id="viewTime" resultType="com.logmaster.domain.model.PerDay">
+        SELECT
+            TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) as `day` ,
+            ROUND(SUM(time / 1000)) as `count`
+        FROM raw_span_view
+        GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
+    </select>
+
+    <select id="enterCount" resultType="com.logmaster.domain.model.PerDay">
+        SELECT
+            HOUR(client_time) as `hour` ,
+            COUNT(`name`) / COUNT(DISTINCT `name`) as `count`
+        FROM raw_event_enter
+        GROUP BY HOUR(client_time);
+    </select>
+
+
 </mapper>
