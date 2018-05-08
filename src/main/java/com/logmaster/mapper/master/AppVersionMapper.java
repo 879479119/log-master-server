@@ -1,4 +1,4 @@
-package com.logmaster.mapper;
+package com.logmaster.mapper.master;
 
 
 import com.logmaster.domain.model.AppVersion;

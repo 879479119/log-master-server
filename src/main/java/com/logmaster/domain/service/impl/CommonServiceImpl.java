@@ -4,7 +4,7 @@ import com.logmaster.domain.model.App;
 import com.logmaster.domain.model.AppPlatform;
 import com.logmaster.domain.model.AppVersion;
 import com.logmaster.domain.service.CommonService;
-import com.logmaster.mapper.CommonMapper;
+import com.logmaster.mapper.master.CommonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

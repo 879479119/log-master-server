@@ -1,12 +1,9 @@
 package com.logmaster.domain.service.impl;
 
-import com.logmaster.application.constants.Constants;
-import com.logmaster.domain.model.AppVersion;
 import com.logmaster.domain.model.AppVersionView;
 import com.logmaster.domain.model.Pagination;
-import com.logmaster.domain.model.User;
 import com.logmaster.domain.service.AppVersionService;
-import com.logmaster.mapper.AppVersionMapper;
+import com.logmaster.mapper.master.AppVersionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

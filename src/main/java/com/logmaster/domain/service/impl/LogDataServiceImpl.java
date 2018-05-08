@@ -1,13 +1,12 @@
 package com.logmaster.domain.service.impl;
 import com.logmaster.domain.model.*;
 import com.logmaster.domain.service.LogDataService;
-import com.logmaster.mapper.*;
+import com.logmaster.mapper.master.LogDataMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

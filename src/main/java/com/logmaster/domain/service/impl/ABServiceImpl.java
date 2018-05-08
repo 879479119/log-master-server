@@ -1,12 +1,10 @@
 package com.logmaster.domain.service.impl;
 
-import com.logmaster.domain.model.Column;
 import com.logmaster.domain.model.ABTestView;
 import com.logmaster.domain.model.Pagination;
 import com.logmaster.domain.model.Param;
 import com.logmaster.domain.service.ABService;
-import com.logmaster.domain.service.LogDataService;
-import com.logmaster.mapper.ABMapper;
+import com.logmaster.mapper.master.ABMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
