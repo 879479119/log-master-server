@@ -25,6 +25,7 @@ public class LogMasterApplication extends WebMvcConfigurerAdapter {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/api/user/login")
                 .excludePathPatterns("/api/analysis/**")
+                .excludePathPatterns("/api/contrast/**")
                 .excludePathPatterns("/api/hybrid/**");
     }
 

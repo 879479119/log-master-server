@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.logmaster.mapper.slave.ContrastMapper">
+
+    <select id="stayTime" resultType="com.logmaster.domain.model.PerDay">
+        SELECT
+            SUM(`time`) / 1000 as `count1`,
+            TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) as `day`
+        FROM raw_span_view
+        WHERE
+            ab_test REGEXP ',${testId},'
+            AND ab_params REGEXP ',${paramId},'
+        AND url = #{url}
+        GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
+    </select>
+
+    <select id="clickRatio" resultType="com.logmaster.domain.model.PerDay">
+        SELECT
+            COUNT(id) as `count`,
+            TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) as `day`
+        FROM raw_event_click
+        WHERE
+            ab_test REGEXP ',${testId},'
+            AND ab_params REGEXP ',${paramId},'
+        AND url = #{url}
+        AND click_id = #{btnId}
+        GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
+    </select>
+
+    <select id="pvCount" resultType="com.logmaster.domain.model.PerDay">
+        SELECT
+            COUNT(`id`) as `count`,
+            TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) as `day`
+        FROM raw_view_page
+        WHERE
+            ab_test REGEXP ',${testId},'
+            AND ab_params REGEXP ',${paramId},'
+            AND url = #{url}
+        GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
+    </select>
+
+</mapper>

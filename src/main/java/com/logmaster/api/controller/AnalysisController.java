@@ -74,7 +74,7 @@ public class AnalysisController {
     @RequestMapping(value = "/pvCount", method = RequestMethod.GET)
     public Response pvCount() {
         try {
-            List<Integer> addCount = analysisService.pvCount();
+            List<Integer> addCount = analysisService.pvCount(null);
             return Responses.successResponse().addData("count", addCount);
         } catch (Exception e) {
             logger.error(ErrorCodeEnum.DETAILERROR.getErrorName() + Util.getExceptionMessage(e));

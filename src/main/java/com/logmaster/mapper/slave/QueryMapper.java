@@ -18,7 +18,7 @@ public interface QueryMapper {
 
     List<Integer> lineActiveDay();
 
-    List<Integer> pvCount();
+    List<Integer> pvCount(@Param("url") String url);
 
     List<Integer> viewTime();
 

@@ -38,8 +38,8 @@ public class AnalysisServiceImpl implements AnalysisService {
     }
 
     @Override
-    public List<Integer> pvCount() {
-        return queryMapper.pvCount();
+    public List<Integer> pvCount(String url) {
+        return queryMapper.pvCount(url);
     }
 
     @Override

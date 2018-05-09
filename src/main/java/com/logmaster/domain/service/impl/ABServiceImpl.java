@@ -1,6 +1,7 @@
 package com.logmaster.domain.service.impl;
 
 import com.logmaster.domain.model.ABTestView;
+import com.logmaster.domain.model.Column;
 import com.logmaster.domain.model.Pagination;
 import com.logmaster.domain.model.Param;
 import com.logmaster.domain.service.ABService;
@@ -75,4 +76,8 @@ public class ABServiceImpl implements ABService {
         return abMapper.getABTestView(id);
     }
 
+    @Override
+    public List<Param> getColumnList(Integer id) {
+        return abMapper.getColumnList(id);
+    }
 }

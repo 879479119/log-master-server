@@ -2,6 +2,10 @@ package com.logmaster.domain.service;
 
 
 import com.logmaster.domain.model.ABTestView;
+import com.logmaster.domain.model.Column;
+import com.logmaster.domain.model.Param;
+
+import java.util.List;
 
 /**
  * @author wanglu
@@ -17,5 +21,7 @@ public interface ABService extends BaseService<ABTestView> {
      * @return 详情信息.
      */
     ABTestView getDetail(Integer id);
+
+    List<Param> getColumnList(Integer id);
 
 }

@@ -24,7 +24,7 @@ public interface AnalysisService {
     List<Integer> lineActiveDay();
 
 
-    List<Integer> pvCount();
+    List<Integer> pvCount(String url);
 
 
     List<Integer> viewTime();

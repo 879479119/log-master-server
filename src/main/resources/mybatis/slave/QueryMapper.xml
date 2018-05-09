@@ -27,6 +27,9 @@
             TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` ) as `day` ,
             COUNT(id) as `count`
         FROM raw_view_page
+        <if test="url != null">
+            <where>url = '${url}'</where>
+        </if>
         GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
     </select>
 

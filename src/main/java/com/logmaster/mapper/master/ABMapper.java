@@ -1,6 +1,7 @@
 package com.logmaster.mapper.master;
 
 import com.logmaster.domain.model.ABTestView;
+import com.logmaster.domain.model.Column;
 import com.logmaster.domain.model.Pagination;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -53,4 +54,6 @@ public interface ABMapper {
      * @return 日志详情
      */
     ABTestView getABTestView(@Param("id") Integer id);
+
+    List<com.logmaster.domain.model.Param> getColumnList(@Param("id") Integer id);
 }
