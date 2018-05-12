@@ -65,11 +65,11 @@ public class ABController {
             }
             int percentage = abTestView.getPercentage();
 
-            int array[] = ABController.randomArray(0, 1000, percentage);
+            String array[] = ABController.randomArray(0, 1000, percentage);
 
             StringBuilder stringBuilder = new StringBuilder();
 
-            for (int t : array) {
+            for (String t : array) {
                 stringBuilder.append(t);
                 stringBuilder.append(',');
             }
@@ -117,7 +117,7 @@ public class ABController {
         }
     }
 
-    public static int[] randomArray(int min,int max,int n){
+    private static String[] randomArray(int min,int max,int n){
         int len = max-min+1;
 
         if(max < min || n > len){
@@ -130,14 +130,14 @@ public class ABController {
             source[i-min] = i;
         }
 
-        int[] result = new int[n];
+        String[] result = new String[n];
         Random rd = new Random();
         int index = 0;
         for (int i = 0; i < result.length; i++) {
             //待选数组0到(len-2)随机一个下标
             index = Math.abs(rd.nextInt() % len--);
             //将随机到的数放入结果集
-            result[i] = source[index];
+            result[i] = String.format("%03d", source[index]);
             //将待选数组中被随机到的数，用待选数组(len-1)下标对应的数替换
             source[index] = source[len];
         }

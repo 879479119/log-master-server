@@ -38,7 +38,13 @@ public class HybridController {
     ABService abService;
 
     @RequestMapping("/abInfo")
-    public Response getAbInfo (@RequestParam("name") String userName, ABTestView abTestView) throws JsonProcessingException {
+    public Response getAbInfo (
+            @RequestParam("name") String userName,
+            @RequestParam("app") int app,
+            @RequestParam("platform") int platform,
+            @RequestParam("version") int version,
+
+            ABTestView abTestView) throws JsonProcessingException {
         logger.info(String.valueOf(userName.hashCode()));
 
         String userHash = String.valueOf(userName.hashCode());
@@ -46,6 +52,13 @@ public class HybridController {
         // 筛选现在正在进行的测试
         abTestView.setStartTime(new Date());
         abTestView.setEndTime(new Date());
+
+        // 筛选当前应用符合的测试用例
+
+        abTestView.setVersionId(version);
+        abTestView.setPlatformId(platform);
+
+        logger.info(platform + "  " + version + "  " + app);
 
         class ABTest {
             private int testId;
@@ -77,6 +90,7 @@ public class HybridController {
             }
         }
 
+        // 应用于此版本，这段时间在工作的AB测试
         List<ABTestView> abTestViews = abService.getList(abTestView, new Pagination(0, 999));
 
         List<ABTest> abTests = new ArrayList<>();
@@ -87,13 +101,13 @@ public class HybridController {
             String hashs[] = hash.split(",");
 
             for (int i = 0; i < hashs.length; i++) {
-                int index = userHash.indexOf(hashs[i]);
-                if (index != -1) {
+                if (userHash.endsWith(hashs[i])) {
                     List<Param> params = abTestView1.getParams();
                     // 如果参与进了这次测试
                     // 那么根据存的随机数看看他是在第几位 决定他拿到哪些参数
                     if (params.size() == 0) { continue; }
-                    int group = index / params.size();
+                    int count = hashs.length / params.size();
+                    int group = i / count;
                     ABTest abTest = new ABTest();
                     abTest.setTestId(abTestView1.getId());
                     abTest.setParamsId(params.get(group).getId());

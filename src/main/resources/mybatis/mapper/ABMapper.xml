@@ -26,9 +26,12 @@
         FROM ab_test
         <if test="aBTestView != null">
             <where>
-                <!--<if test="aBTestView.name != null and aBTestView.name != ''">-->
-                    <!--AND name LIKE '%${aBTestView.name}%'-->
-                <!--</if>-->
+                <if test="aBTestView.platformId != null">
+                    AND platform_id = #{aBTestView.platformId}
+                </if>
+                <if test="aBTestView.versionId != null">
+                    AND version_id = #{aBTestView.versionId}
+                </if>
                 <if test="aBTestView.status != null and aBTestView.status != ''">
                     AND status = ${aBTestView.status}
                 </if>
@@ -125,6 +128,8 @@
             description,
             create_time as createTime,
             update_time as updateTime,
+            start_time as startTime,
+            end_time as endTime,
             `hash`
         FROM ab_test
         WHERE id = #{id}

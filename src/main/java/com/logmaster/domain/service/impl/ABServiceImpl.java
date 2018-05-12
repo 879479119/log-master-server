@@ -63,12 +63,12 @@ public class ABServiceImpl implements ABService {
     @Transactional(rollbackFor = Exception.class)
     public void edit(ABTestView bean) {
         abMapper.editLogData(bean);
-        final List<Param> params = bean.getParams();
-        abMapper.delColumnData(bean.getId());
-
-        if (!params.isEmpty()) {
-            abMapper.addColumnData(params);
-        }
+//        final List<Param> params = bean.getParams();
+//        abMapper.delColumnData(bean.getId());
+//
+//        if (!params.isEmpty()) {
+//            abMapper.addColumnData(params);
+//        }
     }
 
     @Override
