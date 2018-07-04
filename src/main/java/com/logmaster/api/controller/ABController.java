@@ -39,7 +39,7 @@ public class ABController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Response getABList(@RequestParam(required = false, defaultValue = "1") Integer page,
-                                 @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                 @RequestParam(required = false, defaultValue = "1000") Integer pageSize,
                                  @RequestParam(required = false, defaultValue = "create_time") String orderBy,
                                  @RequestParam(required = false, defaultValue = "DESC") String orderType,
                                  ABTestView abTestView,
@@ -111,6 +111,17 @@ public class ABController {
         try {
             ABTestView abTestView = abService.getDetail(id);
             return Responses.successResponse().addData("detail", abTestView);
+        } catch (Exception e) {
+            logger.error(ErrorCodeEnum.DETAILERROR.getErrorName() + Util.getExceptionMessage(e));
+            return Responses.errorResponse(ErrorCodeEnum.DETAILERROR.getErrorCode(), ErrorCodeEnum.DETAILERROR.getErrorName());
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public Response getLogDetail(@PathVariable Integer id) {
+        try {
+            abService.delete(id);
+            return Responses.successResponse();
         } catch (Exception e) {
             logger.error(ErrorCodeEnum.DETAILERROR.getErrorName() + Util.getExceptionMessage(e));
             return Responses.errorResponse(ErrorCodeEnum.DETAILERROR.getErrorCode(), ErrorCodeEnum.DETAILERROR.getErrorName());

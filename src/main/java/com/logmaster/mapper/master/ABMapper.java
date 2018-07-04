@@ -56,4 +56,6 @@ public interface ABMapper {
     ABTestView getABTestView(@Param("id") Integer id);
 
     List<com.logmaster.domain.model.Param> getColumnList(@Param("id") Integer id);
+
+    void delete(@Param("id") Integer id);
 }

@@ -46,12 +46,20 @@ public class LogDataController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Response getLogList(@RequestParam(required = false, defaultValue = "1") Integer page,
-                                 @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                 @RequestParam(required = false, defaultValue = "1000") Integer pageSize,
                                  @RequestParam(required = false, defaultValue = "create_time") String orderBy,
                                  @RequestParam(required = false, defaultValue = "DESC") String orderType,
+                                 @RequestParam(required = false) String name,
+                                 @RequestParam(required = false, defaultValue = "-1") Integer status,
                                  LogDataView logDataView,
                                  HttpServletRequest request) {
         try {
+            if (name != null) {
+                logDataView.setName(name);
+            }
+            if (status != null) {
+                logDataView.setStatus(status);
+            }
             Pagination pagination = new Pagination((page - 1) * pageSize, pageSize, orderBy, orderType);
             QueryTransformUtil<LogDataView> queryTransformUtil = new QueryTransformUtil<>();
             queryTransformUtil.transformQuery(logDataView);
@@ -115,7 +123,16 @@ public class LogDataController {
             LogDataView logDataView = logDataService.getDetail(id);
             return Responses.successResponse().addData("detail", logDataView);
         } catch (Exception e) {
-            logger.error(ErrorCodeEnum.DETAILERROR.getErrorName() + Util.getExceptionMessage(e));
+            return Responses.errorResponse(ErrorCodeEnum.DETAILERROR.getErrorCode(), ErrorCodeEnum.DETAILERROR.getErrorName());
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public Response delete(@PathVariable Integer id) {
+        try {
+            logDataService.delete(id);
+            return Responses.successResponse();
+        } catch (Exception e) {
             return Responses.errorResponse(ErrorCodeEnum.DETAILERROR.getErrorCode(), ErrorCodeEnum.DETAILERROR.getErrorName());
         }
     }

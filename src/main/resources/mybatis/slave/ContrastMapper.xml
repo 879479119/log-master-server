@@ -22,8 +22,6 @@
         WHERE
             ab_test REGEXP ',${testId},'
             AND ab_params REGEXP ',${paramId},'
-        AND url = #{url}
-        AND click_id = #{btnId}
         GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
     </select>
 
@@ -35,7 +33,7 @@
         WHERE
             ab_test REGEXP ',${testId},'
             AND ab_params REGEXP ',${paramId},'
-            AND url = #{url}
+            AND url REGEXP '^${url}.*'
         GROUP BY TO_DAYS( NOW( ) ) - TO_DAYS( `client_time` );
     </select>
 

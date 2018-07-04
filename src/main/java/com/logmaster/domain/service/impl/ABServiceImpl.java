@@ -80,4 +80,10 @@ public class ABServiceImpl implements ABService {
     public List<Param> getColumnList(Integer id) {
         return abMapper.getColumnList(id);
     }
+
+    @Override
+    public void delete(Integer id) {
+        abMapper.delColumnData(id);
+        abMapper.delete(id);
+    }
 }

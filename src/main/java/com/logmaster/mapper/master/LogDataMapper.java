@@ -40,7 +40,7 @@ public interface LogDataMapper {
      */
     Integer addLogData(@Param("log") LogDataView logDataView);
 
-    void addColumnData(@Param("columns") List<Column> columns);
+    void addColumnData(@Param("columns") List<Column> columns, @Param("parent") Integer id);
 
     /**
      * 修改日志信息.
@@ -56,4 +56,6 @@ public interface LogDataMapper {
      * @return 日志详情
      */
     LogDataView getLogDataView(@Param("id") Integer id);
+
+    void delete(@Param("id") Integer id);
 }

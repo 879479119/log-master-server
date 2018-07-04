@@ -24,4 +24,6 @@ public interface ABService extends BaseService<ABTestView> {
 
     List<Param> getColumnList(Integer id);
 
+    void delete(Integer id);
+
 }

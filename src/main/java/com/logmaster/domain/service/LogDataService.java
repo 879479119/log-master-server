@@ -20,4 +20,6 @@ public interface LogDataService extends BaseService<LogDataView> {
      */
     LogDataView getDetail(Integer id);
 
+    void delete(Integer id);
+
 }

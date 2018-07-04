@@ -47,7 +47,7 @@ public class LogDataServiceImpl implements LogDataService {
         for (Column column : bean.getColumns()) {
             column.setParent(id);
         }
-        logDataMapper.addColumnData(bean.getColumns());
+        logDataMapper.addColumnData(bean.getColumns(), bean.getId());
 
         return id;
     }
@@ -60,7 +60,7 @@ public class LogDataServiceImpl implements LogDataService {
         logDataMapper.delColumnData(bean.getId());
 
         if (!columns.isEmpty()) {
-            logDataMapper.addColumnData(columns);
+            logDataMapper.addColumnData(columns, bean.getId());
         }
     }
 
@@ -69,4 +69,9 @@ public class LogDataServiceImpl implements LogDataService {
         return logDataMapper.getLogDataView(id);
     }
 
+    @Override
+    public void delete(Integer id) {
+        logDataMapper.delete(id);
+        logDataMapper.delColumnData(id);
+    }
 }

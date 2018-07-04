@@ -153,4 +153,10 @@
         from ab_param
         where parent = #{id}
     </delete>
+
+    <delete id="delete">
+        DELETE
+        from ab_test
+        where id = #{id}
+    </delete>
 </mapper>

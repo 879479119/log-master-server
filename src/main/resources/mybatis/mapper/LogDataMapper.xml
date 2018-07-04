@@ -28,7 +28,7 @@
                 <if test="logDataView.name != null and logDataView.name != ''">
                     AND name LIKE '%${logDataView.name}%'
                 </if>
-                <if test="logDataView.status != null and logDataView.status != ''">
+                <if test="logDataView.status != null and logDataView.status != -1">
                     AND status = ${logDataView.status}
                 </if>
             </where>
@@ -111,7 +111,7 @@
         <foreach collection="columns" item="t" separator=",">
         (
             #{t.name},
-            #{t.parent},
+            #{parent},
             #{t.expression},
             #{t.description},
             #{t.creator}
@@ -198,5 +198,11 @@
         DELETE
         from  `column`
         where parent = #{id}
+    </delete>
+
+    <delete id="delete">
+        DELETE
+        from  `mine`
+        where id = #{id}
     </delete>
 </mapper>

@@ -57,6 +57,7 @@ public class HybridController {
 
         abTestView.setVersionId(version);
         abTestView.setPlatformId(platform);
+        abTestView.setStatus(1);
 
         logger.info(platform + "  " + version + "  " + app);
 
